@@ -18,10 +18,8 @@ class ProfileController extends Controller
      */
     public function show(User $user): View
     {
-        $tweets = Tweet::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
+        $user->load('tweets.likes');
+        $tweets = $user->tweets()->orderBy('created_at', 'desc')->get();
         return view('profile.show', compact('user', 'tweets'));
     }
 
