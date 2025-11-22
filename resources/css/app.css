@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+	font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+	background: #fff;
+}
+
+.bg-blue-900 {
+	background-color: #0a1931 !important;
+}
+.text-blue-900 {
+	color: #0a1931 !important;
+}
+.border-blue-900\/10 {
+	border-color: rgba(10, 25, 49, 0.10) !important;
+}
+.border-blue-900\/20 {
+	border-color: rgba(10, 25, 49, 0.20) !important;
+}
+.text-blue-900\/60 {
+	color: rgba(10, 25, 49, 0.60) !important;
+}
+.text-blue-900\/40 {
+	color: rgba(10, 25, 49, 0.40) !important;
+}

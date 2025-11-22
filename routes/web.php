@@ -37,7 +37,10 @@ Route::middleware(['auth'])->group(function () {
     })->middleware(['verified'])->name('dashboard');
 
     // HOME TIMELINE (Main feed)
-    Route::get('/home', [TweetController::class, 'index'])->name('home');
+    Route::get('/home', function () {
+        $tweets = \App\Models\Tweet::with('user')->latest()->get();
+        return view('dashboard', compact('tweets'));
+    })->middleware(['auth', 'verified'])->name('home');
 
     // Tweet CRUD
     Route::resource('tweets', TweetController::class);

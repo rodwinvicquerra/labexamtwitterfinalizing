@@ -3,68 +3,72 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-xl mx-auto mt-8">
+    <div class="max-w-2xl mx-auto mt-10">
         {{-- Create Tweet Form --}}
-        <form action="{{ route('tweets.store') }}" method="POST" class="mb-6 bg-white p-5 rounded shadow">
+        <form action="{{ route('tweets.store') }}" method="POST" class="mb-8 bg-white border border-blue-900/10 p-6 rounded-xl shadow-lg">
             @csrf
             <textarea 
                 name="content" 
                 maxlength="280"
-                class="w-full border-gray-300 rounded p-3 focus:ring-blue-500 focus:border-blue-500"
+                class="w-full border-2 border-blue-900/20 rounded-xl p-4 text-lg font-sans focus:ring-blue-900 focus:border-blue-900 placeholder:text-blue-900/60"
                 placeholder="What's happening?"
+                style="resize: none; min-height: 80px;"
             ></textarea>
-            <p class="text-sm text-gray-500 mt-1">Max 280 characters</p>
-            @error('content')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
+            <div class="flex justify-between items-center mt-2">
+                <p class="text-xs text-blue-900/60">Max 280 characters</p>
+                @error('content')
+                    <p class="text-red-500 text-xs">{{ $message }}</p>
+                @enderror
+            </div>
             <button 
-                class="mt-3 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                class="mt-4 bg-blue-900 text-blue-900 px-8 py-3 rounded-full font-extrabold shadow-lg border-2 border-blue-900 hover:bg-blue-800 hover:text-blue-800 transition focus:outline-none focus:ring-2 focus:ring-blue-900"
+                style="box-shadow: 0 4px 16px rgba(10,25,49,0.18); letter-spacing: 0.5px;"
             >
                 Tweet
             </button>
         </form>
         {{-- All Tweets --}}
         @foreach ($tweets as $tweet)
-            <div class="bg-white p-5 rounded shadow mb-4">
-                <div class="flex justify-between items-center">
-                    <a href="{{ route('profile.show', $tweet->user->id) }}" class="font-semibold text-blue-600">
+            <div class="bg-white border border-blue-900/10 p-6 rounded-xl shadow-lg mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <a href="{{ route('profile.show', $tweet->user->id) }}" class="font-bold text-blue-900 text-lg hover:underline">
                         {{ $tweet->user->name }}
                     </a>
-                    <p class="text-gray-500 text-sm">
+                    <p class="text-blue-900/60 text-xs">
                         {{ $tweet->created_at->diffForHumans() }}
                         @if($tweet->edited)
-                            <span class="text-xs text-gray-400">(edited)</span>
+                            <span class="text-xs text-blue-900/40">(edited)</span>
                         @endif
                     </p>
                 </div>
-                <p class="mt-2 text-gray-800">{{ $tweet->content }}</p>
+                <p class="mt-2 text-blue-900 text-base font-sans">{{ $tweet->content }}</p>
                 {{-- Like System --}}
-                <div class="flex items-center mt-3 gap-3">
+                <div class="flex items-center mt-4 gap-4">
                     @if ($tweet->isLikedBy(auth()->user()))
                         {{-- UNLIKE --}}
                         <form action="{{ route('tweets.unlike', $tweet->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button class="text-red-600 text-lg">❤️</button>
+                            <button class="text-blue-900 text-xl">❤️</button>
                         </form>
                     @else
                         {{-- LIKE --}}
                         <form action="{{ route('tweets.like', $tweet->id) }}" method="POST">
                             @csrf
-                            <button class="text-gray-600 hover:text-red-600 text-lg">♡</button>
+                            <button class="text-blue-900/40 hover:text-blue-900 text-xl">♡</button>
                         </form>
                     @endif
                     {{-- Like Count --}}
-                    <span class="text-sm text-gray-600">
+                    <span class="text-sm text-blue-900/60">
                         {{ $tweet->likes()->count() }} likes
                     </span>
                 </div>
                 {{-- Edit / Delete --}}
                 @if ($tweet->user_id === auth()->id())
-                    <div class="flex gap-3 mt-3">
+                    <div class="flex gap-4 mt-4">
                         <a 
                             href="{{ route('tweets.edit', $tweet->id) }}" 
-                            class="text-blue-600 text-sm hover:underline"
+                            class="text-blue-900 text-sm hover:underline font-semibold"
                         >
                             Edit
                         </a>
@@ -75,7 +79,7 @@
                         >
                             @csrf
                             @method('DELETE')
-                            <button class="text-red-600 text-sm hover:underline">
+                            <button class="text-red-600 text-sm hover:underline font-semibold">
                                 Delete
                             </button>
                         </form>
