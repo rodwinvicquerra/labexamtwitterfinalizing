@@ -1,3 +1,24 @@
+    @if(session('success'))
+        <div id="tweet-success-popup" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-900 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-fade-in-up" style="font-size:1.1rem; border: 2px solid #3b82f6; box-shadow: 0 8px 32px rgba(30,58,138,0.18);">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="font-extrabold text-blue-100 drop-shadow-lg" style="letter-spacing:1px; text-shadow: 0 2px 8px #1e3a8a;">Tweeted successfully!</span>
+        </div>
+        <script>
+            setTimeout(function() {
+                var popup = document.getElementById('tweet-success-popup');
+                if (popup) popup.style.display = 'none';
+            }, 2200);
+        </script>
+        <style>
+            @keyframes fade-in-up {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in-up { animation: fade-in-up 0.5s ease; }
+        </style>
+    @endif
 @extends('layouts.app')
 
 @section('content')
