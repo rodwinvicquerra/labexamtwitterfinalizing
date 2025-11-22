@@ -8,7 +8,8 @@
 
 <nav class="bg-blue-900 p-4 shadow mb-8">
     <div class="max-w-4xl mx-auto flex flex-col gap-2">
-        <div class="w-full flex justify-center mb-2">
+        <div class="w-full flex justify-center items-center gap-3 mb-2">
+            <img src="/twitterlogo.png" alt="Twitter Logo" class="h-8 w-8 inline-block align-middle">
             <span class="font-extrabold text-blue-900 text-xl tracking-tight">Twitter ni Rodwin</span>
         </div>
         <div class="flex justify-between items-center">
