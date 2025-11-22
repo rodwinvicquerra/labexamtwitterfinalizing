@@ -1,3 +1,26 @@
+/* Tweet button custom styles */
+.tweet-btn {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem 2rem;
+	background: #0a1931;
+	color: #fff;
+	border-radius: 9999px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	box-shadow: 0 4px 16px rgba(10,25,49,0.18);
+	border: none;
+	transition: background 0.2s;
+}
+.tweet-btn:hover {
+	background: #132a4d;
+}
+.tweet-btn img {
+	height: 1.5rem;
+	width: 1.5rem;
+	margin-right: 0.5rem;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

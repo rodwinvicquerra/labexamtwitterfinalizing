@@ -66,12 +66,6 @@
             box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
         }
 
-        .skeleton-loader {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 1000px 100%;
-            animation: shimmer 2s infinite;
-        }
-
         .tooltip {
             position: relative;
         }
@@ -103,6 +97,10 @@
         .glow-button {
             position: relative;
             overflow: hidden;
+            background-color: #1e3a8a !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .glow-button::before {
@@ -113,7 +111,7 @@
             width: 0;
             height: 0;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.3);
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
@@ -121,6 +119,18 @@
         .glow-button:hover::before {
             width: 300px;
             height: 300px;
+        }
+
+        .glow-button:hover {
+            background-color: #1e40af !important;
+            transform: translateY(-2px);
+        }
+
+        .tweet-btn-text {
+            color: white !important;
+            font-weight: 800 !important;
+            font-size: 1.125rem !important;
+            letter-spacing: 1px;
         }
     </style>
 
@@ -170,10 +180,10 @@
             
             <button 
                 type="submit"
-                class="glow-button mt-4 bg-blue-900 text-white px-8 py-3 rounded-full font-extrabold shadow-lg border-2 border-blue-900 hover:bg-blue-800 transition-all duration-300 relative z-10"
-                style="box-shadow: 0 4px 20px rgba(10,25,49,0.25); letter-spacing: 0.5px;"
+                class="glow-button mt-4 px-10 py-3.5 rounded-full font-extrabold shadow-lg border-2 border-blue-900 transition-all duration-300"
+                style="box-shadow: 0 4px 20px rgba(10,25,49,0.25);"
             >
-                <span class="relative z-10">Tweet 🚀</span>
+                <span class="tweet-btn-text">Tweet</span>
             </button>
         </form>
 
