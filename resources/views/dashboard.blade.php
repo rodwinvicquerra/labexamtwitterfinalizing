@@ -1,187 +1,89 @@
-            @if(session('deleted'))
-                <div id="tweet-success-popup" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-900 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-fade-in-up" style="font-size:1.1rem; border: 2px solid #3b82f6; box-shadow: 0 8px 32px rgba(30,58,138,0.18);">
-                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span class="font-extrabold text-blue-100 drop-shadow-lg" style="letter-spacing:1px; text-shadow: 0 2px 8px #1e3a8a;">Tweet deleted successfully!</span>
-                </div>
-                <script>
-                    setTimeout(function() {
-                        var popup = document.getElementById('tweet-success-popup');
-                        if (popup) popup.style.display = 'none';
-                    }, 2200);
-                </script>
-            @endif
-        @if(session('updated'))
-            <div id="tweet-success-popup" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-900 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-fade-in-up" style="font-size:1.1rem; border: 2px solid #3b82f6; box-shadow: 0 8px 32px rgba(30,58,138,0.18);">
-                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span class="font-extrabold text-blue-100 drop-shadow-lg" style="letter-spacing:1px; text-shadow: 0 2px 8px #1e3a8a;">Tweet updated successfully!</span>
-            </div>
-            <script>
-                setTimeout(function() {
-                    var popup = document.getElementById('tweet-success-popup');
-                    if (popup) popup.style.display = 'none';
-                }, 2200);
-            </script>
-        @endif
-    @if(session('success'))
-        <div id="tweet-success-popup" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-900 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-fade-in-up" style="font-size:1.1rem; border: 2px solid #3b82f6; box-shadow: 0 8px 32px rgba(30,58,138,0.18);">
-            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <span class="font-extrabold text-blue-100 drop-shadow-lg" style="letter-spacing:1px; text-shadow: 0 2px 8px #1e3a8a;">Tweeted successfully!</span>
-        </div>
-        <script>
-            setTimeout(function() {
-                var popup = document.getElementById('tweet-success-popup');
-                if (popup) popup.style.display = 'none';
-            }, 2200);
-        </script>
-        <style>
-            @keyframes fade-in-up {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in-up { animation: fade-in-up 0.5s ease; }
-        </style>
-    @endif
 @extends('layouts.app')
 
 @section('content')
+    {{-- Styles --}}
     <style>
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.2); } /* Made pulse slightly bigger */
         }
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+        .tweet-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .tweet-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(10, 25, 49, 0.15); }
+        .char-counter { transition: all 0.3s ease; }
+        .char-counter.warning { color: #f59e0b; font-weight: 600; }
+        .char-counter.danger { color: #ef4444; font-weight: 700; }
+        
+        /* Updated Like Button Styles */
+        .like-button { transition: transform 0.2s ease; cursor: pointer; }
+        .like-button:active { animation: pulse 0.3s ease; }
+        .like-button.liked { color: #ef4444; } /* Red color */
+        .like-button.unliked { color: rgba(30, 58, 138, 0.4); } /* Blue-ish gray */
+        .like-button.unliked:hover { color: #ef4444; }
 
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .tweet-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tweet-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(10, 25, 49, 0.15);
-        }
-
-        .char-counter {
-            transition: all 0.3s ease;
-        }
-
-        .char-counter.warning {
-            color: #f59e0b;
-            font-weight: 600;
-        }
-
-        .char-counter.danger {
-            color: #ef4444;
-            font-weight: 700;
-        }
-
-        .like-button {
-            transition: transform 0.2s ease;
-        }
-
-        .like-button:active {
-            animation: pulse 0.3s ease;
-        }
-
-        .tweet-textarea {
-            transition: all 0.3s ease;
-        }
-
-        .tweet-textarea:focus {
-            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-        }
-
-        .tooltip {
-            position: relative;
-        }
-
+        .tweet-textarea { transition: all 0.3s ease; }
+        .tweet-textarea:focus { box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1); }
+        .tooltip { position: relative; }
         .tooltip:hover::after {
             content: attr(data-tooltip);
             position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 6px 12px;
-            background: #1e3a8a;
-            color: white;
-            border-radius: 8px;
-            font-size: 12px;
-            white-space: nowrap;
-            margin-bottom: 8px;
-            opacity: 0;
-            animation: fadeInUp 0.3s ease forwards;
+            bottom: 100%; left: 50%; transform: translateX(-50%);
+            padding: 6px 12px; background: #1e3a8a; color: white;
+            border-radius: 8px; font-size: 12px; white-space: nowrap;
+            margin-bottom: 8px; opacity: 0; animation: fadeInUp 0.3s ease forwards; pointer-events: none;
         }
-
         .gradient-text {
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-
         .glow-button {
-            position: relative;
-            overflow: hidden;
-            background-color: #1e3a8a !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; overflow: hidden; background-color: #1e3a8a !important;
+            display: flex; align-items: center; justify-content: center;
         }
-
         .glow-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+            content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;
         }
-
-        .glow-button:hover::before {
-            width: 300px;
-            height: 300px;
+        .glow-button:hover::before { width: 300px; height: 300px; }
+        .glow-button:hover { background-color: #1e40af !important; transform: translateY(-2px); }
+        .tweet-btn-text { color: white !important; font-weight: 800 !important; font-size: 1.125rem !important; letter-spacing: 1px; }
+        
+        /* Popup Animation */
+        @keyframes slideDownFade {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
         }
-
-        .glow-button:hover {
-            background-color: #1e40af !important;
-            transform: translateY(-2px);
-        }
-
-        .tweet-btn-text {
-            color: white !important;
-            font-weight: 800 !important;
-            font-size: 1.125rem !important;
-            letter-spacing: 1px;
-        }
+        .animate-popup { animation: slideDownFade 0.5s ease-out forwards; }
     </style>
+
+    {{-- Success/Deleted Popups (Retained logic) --}}
+    @if(session('success') || session('deleted') || session('updated'))
+        @php
+            $msg = session('success') ?? (session('deleted') ? 'Tweet deleted successfully!' : 'Tweet updated successfully!');
+            $icon = session('deleted') ? 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' : 'M5 13l4 4L19 7';
+        @endphp
+        <div id="status-popup" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-900 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 animate-popup" style="border: 2px solid #3b82f6; box-shadow: 0 8px 32px rgba(30,58,138,0.18);">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icon }}" />
+            </svg>
+            <span class="font-extrabold text-blue-100 drop-shadow-lg" style="letter-spacing:1px;">{{ $msg }}</span>
+        </div>
+        <script>
+            setTimeout(() => {
+                const popup = document.getElementById('status-popup');
+                if(popup) {
+                    popup.style.transition = "opacity 0.5s ease";
+                    popup.style.opacity = "0";
+                    setTimeout(() => popup.remove(), 500);
+                }
+            }, 2500);
+        </script>
+    @endif
 
     <div class="max-w-2xl mx-auto mt-10 px-4">
         {{-- Header Section --}}
@@ -250,6 +152,8 @@
         {{-- All Tweets --}}
         @foreach ($tweets as $index => $tweet)
             <div class="tweet-card bg-white border border-blue-900/10 p-6 rounded-2xl shadow-lg mb-6 fade-in-up" style="animation-delay: {{ 0.3 + ($index * 0.05) }}s;">
+                
+                {{-- Card Header --}}
                 <div class="flex justify-between items-start mb-3">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-900 to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
@@ -272,49 +176,52 @@
                     </div>
                 </div>
                 
+                {{-- Tweet Content --}}
                 <p class="mt-3 text-blue-900 text-base font-sans leading-relaxed pl-15">{{ $tweet->content }}</p>
                 
-                {{-- Interaction Bar --}}
+                {{-- Interaction Bar (UPDATED WITH AJAX) --}}
                 <div class="flex items-center mt-5 pt-4 border-t border-blue-900/10 gap-6">
-                    {{-- Like System --}}
+                    
+                    {{-- AJAX Like System --}}
                     <div class="flex items-center gap-2">
-                        @if ($tweet->isLikedBy(auth()->user()))
-                            {{-- UNLIKE --}}
-                            <form action="{{ route('tweets.unlike', $tweet->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button class="like-button text-2xl hover:scale-110 transition tooltip" data-tooltip="Unlike">❤️</button>
-                            </form>
-                        @else
-                            {{-- LIKE --}}
-                            <form action="{{ route('tweets.like', $tweet->id) }}" method="POST">
-                                @csrf
-                                <button class="like-button text-2xl text-blue-900/40 hover:text-red-500 hover:scale-110 transition tooltip" data-tooltip="Like">♡</button>
-                            </form>
-                        @endif
-                        <span class="text-sm text-blue-900/70 font-semibold">
+                        @php
+                            $isLiked = $tweet->isLikedBy(auth()->user());
+                        @endphp
+                        
+                        <button 
+                            onclick="toggleLike(this, '{{ $tweet->id }}')"
+                            class="like-button text-2xl hover:scale-110 tooltip focus:outline-none {{ $isLiked ? 'liked' : 'unliked' }}"
+                            data-tooltip="{{ $isLiked ? 'Unlike' : 'Like' }}"
+                            data-liked="{{ $isLiked ? 'true' : 'false' }}"
+                            data-url-like="{{ route('tweets.like', $tweet->id) }}"
+                            data-url-unlike="{{ route('tweets.unlike', $tweet->id) }}"
+                        >
+                            <span class="heart-icon">
+                                @if ($isLiked)
+                                    ❤️
+                                @else
+                                    ♡
+                                @endif
+                            </span>
+                        </button>
+
+                        <span id="count-{{ $tweet->id }}" class="text-sm text-blue-900/70 font-semibold">
                             {{ $tweet->likes()->count() }}
                         </span>
                     </div>
 
-                    {{-- Edit / Delete --}}
+                    {{-- Edit / Delete Buttons (Standard Forms) --}}
                     @if ($tweet->user_id === auth()->id())
                         <div class="flex gap-4 ml-auto">
-                            <a 
-                                href="{{ route('tweets.edit', $tweet->id) }}" 
-                                class="flex items-center gap-1 text-blue-900 text-sm hover:underline font-semibold transition tooltip"
-                                data-tooltip="Edit tweet"
-                            >
+                            <a href="{{ route('tweets.edit', $tweet->id) }}" 
+                               class="flex items-center gap-1 text-blue-900 text-sm hover:underline font-semibold transition tooltip"
+                               data-tooltip="Edit tweet">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                                 Edit
                             </a>
-                            <form 
-                                action="{{ route('tweets.destroy', $tweet->id) }}" 
-                                method="POST"
-                                onsubmit="return confirm('Are you sure you want to delete this tweet?')"
-                            >
+                            <form action="{{ route('tweets.destroy', $tweet->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tweet?')">
                                 @csrf
                                 @method('DELETE')
                                 <button class="flex items-center gap-1 text-red-600 text-sm hover:underline font-semibold transition tooltip" data-tooltip="Delete tweet">
@@ -342,6 +249,7 @@
     </div>
 
     <script>
+        // Existing Char Count Script
         function updateCharCount(textarea) {
             const counter = document.getElementById('charCounter');
             const length = textarea.value.length;
@@ -357,7 +265,58 @@
             }
         }
 
-        // Add smooth scroll behavior
+        // AJAX Like System Script
+        async function toggleLike(btn, tweetId) {
+            // 1. Get current state
+            const isLiked = btn.getAttribute('data-liked') === 'true';
+            const countSpan = document.getElementById(`count-${tweetId}`);
+            let currentCount = parseInt(countSpan.innerText);
+            const iconSpan = btn.querySelector('.heart-icon');
+
+            // 2. Optimistic UI Update (Instant Visual Feedback)
+            if (isLiked) {
+                // Switch to UNLIKE state visually
+                btn.setAttribute('data-liked', 'false');
+                btn.setAttribute('data-tooltip', 'Like');
+                btn.classList.remove('liked');
+                btn.classList.add('unliked');
+                iconSpan.innerHTML = '♡'; 
+                countSpan.innerText = Math.max(0, currentCount - 1);
+            } else {
+                // Switch to LIKE state visually
+                btn.setAttribute('data-liked', 'true');
+                btn.setAttribute('data-tooltip', 'Unlike');
+                btn.classList.remove('unliked');
+                btn.classList.add('liked');
+                iconSpan.innerHTML = '❤️';
+                countSpan.innerText = currentCount + 1;
+                
+                // Add a small pulse animation on click
+                btn.style.transform = "scale(1.2)";
+                setTimeout(() => btn.style.transform = "scale(1)", 200);
+            }
+
+            // 3. Send Request to Server (Background)
+            const url = isLiked ? btn.getAttribute('data-url-unlike') : btn.getAttribute('data-url-like');
+            const method = isLiked ? 'DELETE' : 'POST';
+
+            try {
+                await fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                // Request successful, UI is already updated
+            } catch (error) {
+                console.error('Error:', error);
+                // Optional: Revert UI if request fails
+            }
+        }
+
+        // Smooth Scroll behavior
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
