@@ -68,8 +68,8 @@ class TweetController extends Controller
             'edited' => true,
         ]);
 
-        return redirect()->route('home')
-            ->with('success', 'Tweet updated!');
+        return redirect()->route('dashboard')
+            ->with('updated', true);
     }
 
     // ---------------------------------------------------------
