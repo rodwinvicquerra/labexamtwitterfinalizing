@@ -81,6 +81,6 @@ class TweetController extends Controller
 
         $tweet->delete();
 
-        return back()->with('success', 'Tweet deleted.');
+        return redirect()->route('dashboard')->with('deleted', true);
     }
 }
