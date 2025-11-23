@@ -13,8 +13,8 @@
             {{-- Avatar --}}
             <div class="relative -mt-10 mb-3 inline-block">
                 <div class="h-20 w-20 bg-blue-900 rounded-full p-1 mx-auto shadow-md border-4 border-white">
-                    <div class="h-full w-full bg-white rounded-full flex items-center justify-center text-blue-900 text-2xl font-bold">
-                        {{ substr($user->name, 0, 1) }}
+                    <div class="h-full w-full bg-white rounded-full flex items-center justify-center text-blue-900 text-lg font-bold px-2 text-center">
+                        {{ $user->name }}
                     </div>
                 </div>
             </div>
