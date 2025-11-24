@@ -18,9 +18,15 @@ class ProfileController extends Controller
      */
     public function show(User $user): View
     {
-        $user->load('tweets.likes');
+        $user->load('tweets.likes', 'groups');
         $tweets = $user->tweets()->orderBy('created_at', 'desc')->get();
-        return view('profile.show', compact('user', 'tweets'));
+        
+        // Load user's owned circles with pending requests
+        $ownedCircles = \App\Models\Group::where('user_id', $user->id)
+            ->with(['pendingRequests'])
+            ->get();
+        
+        return view('profile.show', compact('user', 'tweets', 'ownedCircles'));
     }
 
     /**

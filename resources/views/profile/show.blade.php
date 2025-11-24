@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
+@php
+    $hideGroupsPanel = true;
+@endphp
+
 @section('content')
-<div class="max-w-xl mx-auto py-6 px-4">
+<div class="max-w-2xl mx-auto py-6 px-4">
 
     {{-- 1. Profile Header Card --}}
     <div class="bg-blue-900 border-4 border-blue-900 rounded-2xl shadow-xl overflow-hidden mb-8">
@@ -18,6 +22,17 @@
                     </div>
                 </div>
             </div>
+            {{-- Circles affiliation --}}
+            @if($user->groups->count())
+                <div class="mt-4 border-t border-blue-700 pt-4">
+                    <h3 class="text-sm text-blue-200 mb-2">Member of</h3>
+                    <div class="flex justify-center gap-2 flex-wrap">
+                        @foreach($user->groups as $group)
+                            <a href="#" class="bg-white text-blue-900 px-3 py-1 rounded-full text-sm font-semibold border border-blue-700">{{ $group->name }}</a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             {{-- User Info --}}
             <h1 class="text-2xl font-extrabold text-white">{{ $user->name }}</h1>
@@ -48,7 +63,75 @@
         </div>
     </div>
 
-    {{-- 2. Tweets Feed --}}
+    {{-- 2. Pending Circle Requests (Only for circle authors) --}}
+    @if(auth()->check() && auth()->id() === $user->id && $ownedCircles->count() > 0)
+        @php
+            $totalPendingRequests = $ownedCircles->sum(fn($circle) => $circle->pendingRequests()->count());
+        @endphp
+        @if($totalPendingRequests > 0)
+            <div class="bg-white border-4 border-blue-800 rounded-xl p-5 shadow-lg mb-6">
+                <button 
+                    onclick="togglePendingRequests()" 
+                    class="w-full flex items-center justify-between text-left"
+                >
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <h3 class="text-lg font-bold text-blue-900">Pending Join Requests</h3>
+                        <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{{ $totalPendingRequests }}</span>
+                    </div>
+                    <svg id="pendingRequestsIcon" class="w-5 h-5 text-blue-900 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div id="pendingRequestsList" style="display: none;" class="mt-4 space-y-3">
+                    @foreach($ownedCircles as $circle)
+                        @php
+                            $requests = $circle->pendingRequests()->get();
+                        @endphp
+                        @if($requests->count() > 0)
+                            <div class="border-t border-blue-200 pt-3">
+                                <h4 class="font-bold text-sm text-blue-900 mb-2">{{ $circle->name }}</h4>
+                                <ul class="space-y-2">
+                                    @foreach($requests as $request)
+                                        <li class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-full bg-blue-900 flex items-center justify-center text-white font-bold">
+                                                    {{ substr($request->user->name, 0, 1) }}
+                                                </div>
+                                                <div>
+                                                    <p class="font-semibold text-sm text-blue-900">{{ $request->user->name }}</p>
+                                                    <p class="text-xs text-gray-500">{{ $request->created_at->diffForHumans() }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <form action="{{ route('groups.requests.approve', $request) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="px-4 py-2 bg-blue-900 text-white text-sm font-bold rounded-lg hover:bg-blue-800 transition shadow-md">
+                                                        Accept
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('groups.requests.decline', $request) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="px-4 py-2 bg-white text-blue-900 border-2 border-blue-900 text-sm font-bold rounded-lg hover:bg-blue-50 transition shadow-md">
+                                                        Decline
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        @endif
+    @endif
+
+    {{-- 3. Tweets Feed --}}
     <div class="space-y-4">
         <h2 class="text-xl font-extrabold text-blue-900 px-1 mb-2">Recent Tweets</h2>
 
@@ -105,4 +188,19 @@
     </div>
 
 </div>
+
+<script>
+function togglePendingRequests() {
+    const list = document.getElementById('pendingRequestsList');
+    const icon = document.getElementById('pendingRequestsIcon');
+    
+    if (list.style.display === 'none') {
+        list.style.display = 'block';
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        list.style.display = 'none';
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+</script>
 @endsection

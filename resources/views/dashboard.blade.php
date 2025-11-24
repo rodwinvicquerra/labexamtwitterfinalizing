@@ -85,7 +85,7 @@
         </script>
     @endif
 
-    <div class="max-w-2xl mx-auto mt-10 px-4">
+    <div class="mt-10 px-4">
         {{-- Header Section --}}
         <div class="mb-8 fade-in-up">
             <h1 class="text-4xl font-extrabold gradient-text mb-2">What's on your mind?</h1>

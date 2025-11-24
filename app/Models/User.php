@@ -60,4 +60,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Like::class);
     }
+
+    /**
+     * Groups the user belongs to.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class)->withTimestamps();
+    }
 }

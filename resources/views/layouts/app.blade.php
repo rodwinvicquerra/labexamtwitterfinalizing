@@ -7,10 +7,10 @@
 <body class="bg-white min-h-screen font-sans">
 
 <nav class="bg-blue-900 p-4 shadow mb-8">
-    <div class="max-w-4xl mx-auto flex flex-col gap-2">
+    <div class="max-w-7xl mx-auto flex flex-col gap-2">
         <div class="w-full flex justify-center items-center gap-3 mb-2">
             <img src="/twitterlogo.png" alt="Twitter Logo" class="h-8 w-8 inline-block align-middle">
-            <span class="font-extrabold text-blue-900 text-xl tracking-tight">Twitter ni Rodwin</span>
+            <span class="font-extrabold text-white text-xl tracking-tight">Twitter ni Rodwin</span>
         </div>
         <div class="flex justify-between items-center">
             <a href="{{ route('home') }}" class="font-bold text-blue-900 text-xl tracking-tight bg-white px-4 py-2 rounded-full border-2 border-blue-900 shadow hover:bg-[#e6eaf3] transition">Home</a>
@@ -25,8 +25,16 @@
     </div>
 </nav>
 
-<div class="max-w-4xl mx-auto px-2">
-    @yield('content')
+<div class="max-w-7xl mx-auto px-4 flex gap-6">
+    <main class="flex-1 min-w-0">
+        @yield('content')
+    </main>
+
+    @if(!isset($hideGroupsPanel) || !$hideGroupsPanel)
+        <aside class="w-72 flex-shrink-0">
+            @include('partials.groups-panel')
+        </aside>
+    @endif
 </div>
 
 </body>

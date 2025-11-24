@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GroupController;
 use App\Models\Tweet;
 
 /*
@@ -56,6 +57,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Groups
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+    Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
+    Route::post('/groups/{group}/join', [GroupController::class, 'join'])->name('groups.join');
+    Route::post('/groups/requests/{request}/approve', [GroupController::class, 'approveRequest'])->name('groups.requests.approve');
+    Route::post('/groups/requests/{request}/decline', [GroupController::class, 'declineRequest'])->name('groups.requests.decline');
 });
 
 // Auth Routes (Login/Register)
