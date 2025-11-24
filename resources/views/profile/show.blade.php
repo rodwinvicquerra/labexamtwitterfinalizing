@@ -28,7 +28,7 @@
 
                 {{-- Total Tweets --}}
                 <div class="text-center px-4">
-                    <span class="block font-black text-blue-900"
+                    <span class="block font-black text-white"
                           style="font-size: 2rem !important; line-height: 1.2 !important;">
                         {{ $user->tweets->count() }}
                     </span>
@@ -37,7 +37,7 @@
 
                 {{-- Total Likes --}}
                 <div class="text-center px-4 border-l border-blue-700">
-                    <span class="block font-black text-blue-900"
+                    <span class="block font-black text-white"
                           style="font-size: 2rem !important; line-height: 1.2 !important;">
                         {{ $user->tweets->sum(fn($t) => $t->likes->count()) }}
                     </span>
